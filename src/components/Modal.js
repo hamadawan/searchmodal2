@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import Paper from '@material-ui/core/Paper'
@@ -223,12 +223,22 @@ function MyModal(props){
         {
             const arr = select.filter((u)=>{
                 if(u.itecEmpId!=user.itecEmpId) return u 
-                else u.selected = false
+                
             })
-
             setSelect(arr)
         }
     }
+
+    const close = () => {
+        const arr = data.filter((u)=>{
+            u.selected = false
+            return u   
+        })
+        setData(arr); 
+        setSelect([])
+        props.setIsOpen(false)
+    }
+
     const search = (event) => {
         if(event.target.value=='')
         {
@@ -250,7 +260,7 @@ function MyModal(props){
     const classes = useStyles();
     
     return (
-      <div>
+      <Fragment>
         <Modal
           isOpen={props.isOpen}
           style={customStyles}
@@ -259,7 +269,7 @@ function MyModal(props){
           <div style={{width:'100%', height:'400px'}}>
               <Paper style={{width:'100%', height:'100%', display:'flex', alignItems:'center', flexDirection:'column'}}>
                 
-                <h3 style={{alignSelf:'flex-end', marginRight:'30px',}} onClick={()=>{ setSelect([]); setData(response.content); props.setIsOpen(false)}}>x</h3>
+                <h3 style={{alignSelf:'flex-end', marginRight:'30px',}} onClick={()=>{ close() }}>x</h3>
                 <h3 style={{ marginTop:'-35px'}}>Assign Member to the service</h3>
                 <h5 style={{color:'#999999', marginTop:'-5px'}}>Select member to the service</h5>
                 
@@ -277,9 +287,10 @@ function MyModal(props){
                 <Grid container>
                     {
                         data.map((user)=>{
-                            return <Grid item xs={3} sm={3} md={3}>
+                            return <Grid key={user.itecEmpId.toString()} item xs={3} sm={3} md={3}>
                                         <div style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
-                                            <Checkbox checked={user.selected? true: false} onChange={ (event) => addUser(user, event) } color="primary"/>
+                                            {console.log(user.selected)}
+                                            <Checkbox key={user.itecEmpId.toString()} checked={user.selected ? true: false} onChange={ (event) => addUser(user, event) } color="primary"/>
                                             <h5> {user.firstName} </h5>
                                         </div>
                                     </Grid> 
@@ -290,8 +301,9 @@ function MyModal(props){
               </Paper>
           </div>
         </Modal>
-      </div>
+      </Fragment>
     );
+    
 }
 
 export default MyModal
