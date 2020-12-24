@@ -225,6 +225,7 @@ function MyModal(props){
                 if(u.itecEmpId!=user.itecEmpId) return u 
                 
             })
+            user.selected = false
             setSelect(arr)
         }
     }
